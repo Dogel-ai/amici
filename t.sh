@@ -1,3 +1,2 @@
 #!/bin/bash
-
-echo it works
+echo "Bash | Inputted string: $1"

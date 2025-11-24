@@ -1,4 +1,4 @@
-#!/usr/local/python/current/bin/python
+#!/usr/bin/python
 import sys
 
-print("Inputted string: " + sys.argv[1])
+print("Python | Inputted string: " + sys.argv[1])

@@ -4,25 +4,32 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"strings"
 )
 
 func main() {
-	// TODO: Change this into a config parameter.
-	scripts_dir := "/workspaces/amici/"
+	//TODO: Change this into a config parameter.
+	scripts_dir := "#"
 
-	var chosen_script string
-	fmt.Print("Choose script: ")
-	fmt.Scan(&chosen_script)
-	curr_script := scripts_dir + chosen_script
+	if scripts_dir[len(scripts_dir)-1:] != "/" {
+		scripts_dir = scripts_dir + "/"
+	}
 
-	var input_string string
+	var input_scripts, input_string string
+	fmt.Print("Choose scripts, separated by a comma (,): ")
+	fmt.Scan(&input_scripts)
+
+	scripts_arr := strings.Split(input_scripts, ",")
+
 	fmt.Print("Input string: ")
 	fmt.Scan(&input_string)
 
-	out, err := exec.Command(curr_script, input_string).Output()
-	if err != nil {
-		log.Fatal(err)
-	}
+	for _, v := range scripts_arr {
+		out, err := exec.Command(scripts_dir + v, input_string).Output()
 
-	fmt.Println(string(out))
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(string(out))
+	}
 }

@@ -30,14 +30,16 @@ var (
 )
 
 var runCmd = &cobra.Command{
-	Use:   "run [string] [script]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Use:   "run [string]",
+	Short: "Converts input through a modular selection of script",
+	Long:  `Converts input through a modular selection of scripts.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+This tool takes an argument as input and passes it through a selection of
+scripts within templates, or through singular scripts selected with the --script/-s flag.
+
+Examples:
+  amici run Example String				using the default template
+  amici run Example String -s exampleScript.py		using only exampleScript.py`,
 	Args: cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if(script != nil) {
@@ -60,14 +62,5 @@ to quickly create a Cobra application.`,
 func init() {
 	rootCmd.AddCommand(runCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// runCmd.PersistentFlags().String("foo", "", "A help for foo")
-
 	runCmd.Flags().StringSliceVarP(&script, "script", "s", nil, "select singular script(s) to run")
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -20,6 +20,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -61,7 +62,7 @@ func initConfig() {
 		if err != nil {
 			fmt.Println("Failed to find home directory")
 		}
-		configDir = home + "/.config/amici"
+		configDir = filepath.Join(home, ".config", "amici")
 
 		viper.AddConfigPath(configDir)
 		viper.SetConfigName("amici")

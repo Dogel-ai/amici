@@ -4,17 +4,26 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+
+	"github.com/Dogel-ai/amici/util"
 )
 
 func RunSingle(input_string, input_script string) (string, error) {
 	//TODO: Change this into a config parameter.
-	scripts_dir := "."
+	scriptDir := "./../mod-scripts"
 
-	if scripts_dir[len(scripts_dir)-1:] != "/" {
-		scripts_dir = scripts_dir + "/"
+	input_script = strings.TrimSpace(input_script)
+
+	if scriptDir[len(scriptDir)-1:] != "/" {
+		scriptDir += "/"
+	}
+	scriptDir += input_script
+	
+	if err := util.IsValidScript(scriptDir); err != nil {
+		return "", err
 	}
 
-	out, err := exec.Command(scripts_dir + strings.TrimSpace(input_script), strings.TrimSpace(input_string)).Output()
+	out, err := exec.Command(scriptDir, input_string).Output()
 	if err != nil {
 		return string(out), fmt.Errorf("failed to execute script: %v", err)
 	}

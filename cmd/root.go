@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var configDir string
 
 var rootCmd = &cobra.Command{
 	Use:   "amici",
@@ -49,29 +49,33 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.amici.yaml)")
+	rootCmd.PersistentFlags().StringVar(&configDir, "config", "", "config file (default is $HOME/.config/amici)")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
+	if configDir != "" {
+		viper.SetConfigFile(configDir)
 	} else {
-		// Find home directory.
 		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
+		if err != nil {
+			fmt.Println("Failed to find home directory")
+		}
+		configDir = home + "/.config/amici"
 
-		// Search config in home directory with name ".amici" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(configDir)
+		viper.SetConfigName("amici")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".amici")
 	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	
+	if err := viper.ReadInConfig(); err != nil {
+		if err := os.MkdirAll(configDir, os.ModePerm); err != nil {
+			fmt.Fprintln(os.Stderr, "Could not create config directory ", configDir)
+			os.Exit(1)
+		}
+		if err := viper.SafeWriteConfig(); err != nil {
+			fmt.Fprintln(os.Stderr, "Could not create config file within ", configDir)
+			os.Exit(1)
+		}
 	}
 }

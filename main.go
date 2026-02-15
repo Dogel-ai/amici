@@ -1,43 +1,27 @@
+/*
+Copyright © 2026 Dogel <dogel.kszb@proton.me>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package main
 
 import (
-	"fmt"
-	"log"
-	"os/exec"
-	"os"
-	"strings"
-	"bufio"
+	"github.com/Dogel-ai/amici/cmd"
+
 )
 
 func main() {
-	//TODO: Change this into a config parameter.
-	scripts_dir := "."
-
-	if scripts_dir[len(scripts_dir)-1:] != "/" {
-		scripts_dir = scripts_dir + "/"
-	}
-
-	reader := bufio.NewReader(os.Stdin)
-
-	fmt.Print("Choose scripts, separated by a comma (,): ")
-	input_scripts, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatal("Failed to read input: ", err)
-	}
-
-	fmt.Print("Input string: ")
-	input_string, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatal("Failed to read input: ", err)
-	}
-	input_string = strings.TrimSpace(input_string)
-
-	for v := range strings.SplitSeq(input_scripts, ",") {
-		out, err := exec.Command(scripts_dir + strings.TrimSpace(v), input_string).Output()
-
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(string(out))
-	}
+	cmd.Execute()
 }

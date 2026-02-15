@@ -8,22 +8,22 @@ import (
 	"github.com/Dogel-ai/amici/util"
 )
 
-func RunSingle(input_string, input_script string) (string, error) {
+func RunSingle(inputString, inputScript string) (string, error) {
 	//TODO: Change this into a config parameter.
 	scriptDir := "./../mod-scripts"
 
-	input_script = strings.TrimSpace(input_script)
+	inputScript = strings.TrimSpace(inputScript)
 
 	if scriptDir[len(scriptDir)-1:] != "/" {
 		scriptDir += "/"
 	}
-	scriptDir += input_script
+	scriptDir += inputScript
 	
 	if err := util.IsValidScript(scriptDir); err != nil {
 		return "", err
 	}
 
-	out, err := exec.Command(scriptDir, input_string).Output()
+	out, err := exec.Command(scriptDir, inputString).Output()
 	if err != nil {
 		return string(out), fmt.Errorf("failed to execute script: %v", err)
 	}

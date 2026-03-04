@@ -1,1 +1,3 @@
-/home/dogel/.config/amici/config.yaml
+scriptsDirectory: /home/dogiel/.config/amici/scripts
+templatesDirectory: /home/dogiel/.config/amici/templates
+

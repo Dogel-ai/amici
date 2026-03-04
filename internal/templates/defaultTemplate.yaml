@@ -1,0 +1,7 @@
+scripts:
+  t.py: "%i"
+  t.sh: "%i"
+message: |-
+  Multiline string goes here
+  Another line goes here.
+

@@ -66,6 +66,9 @@ func initConfig() {
 		}
 		configDir = filepath.Join(home, ".config", "amici")
 
+		viper.SetDefault("scripts_directory", filepath.Join(configDir, "scripts"))
+		viper.SetDefault("templates_directory", filepath.Join(configDir, "templates"))
+
 		viper.AddConfigPath(configDir)
 		viper.SetConfigName("config")
 		viper.SetConfigType("yaml")

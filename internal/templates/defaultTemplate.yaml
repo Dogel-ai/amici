@@ -1,7 +1,12 @@
 scripts:
-  t.py: "%i"
-  t.sh: "%i"
+  - 0:
+      script: "t.py"
+      args: "%i"
+  - 1:
+      script: "t.sh"
+      args: "%i"
 message: |-
   Multiline string goes here
   Another line goes here.
-
+  Input from script one %0 went there
+  Input from script two %1 went there

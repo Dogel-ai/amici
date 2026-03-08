@@ -28,5 +28,9 @@ func RunSingle(inputString, inputScript string) (string, error) {
 		return string(out), fmt.Errorf("failed to execute script: %v", err)
 	}
 
+	if out[len(out)-1] == 10 {
+		return string(out[0:len(out)-1]), nil
+	}
+
 	return string(out), nil
 }

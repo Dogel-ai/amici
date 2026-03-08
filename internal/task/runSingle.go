@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/Dogel-ai/amici/util"
+	"github.com/spf13/viper"
 )
 
 func RunSingle(inputString, inputScript string) (string, error) {
-	//TODO: Change this into a config parameter.
-	scriptDir := "./../mod-scripts"
+	scriptDir := viper.GetString("scripts_directory")
 
 	inputScript = strings.TrimSpace(inputScript)
 
@@ -26,6 +26,10 @@ func RunSingle(inputString, inputScript string) (string, error) {
 	out, err := exec.Command(scriptDir, inputString).Output()
 	if err != nil {
 		return string(out), fmt.Errorf("failed to execute script: %v", err)
+	}
+
+	if out[len(out)-1] == 10 {
+		return string(out[0:len(out)-1]), nil
 	}
 
 	return string(out), nil

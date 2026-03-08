@@ -21,6 +21,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"bufio"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -37,8 +39,8 @@ This tool takes an argument as input and passes it through a selection of
 scripts within templates, or through singular scripts selected with the --script/-s flag.
 
 Examples:
-  amici run Example String                              using the default template
-  amici run Example String -s exampleScript.py          using only exampleScript.py`,
+  amici run Example String			using the default template
+  amici run Example String -s exampleScript.py	using only exampleScript.py`,
 }
 
 func Execute() {
@@ -64,19 +66,35 @@ func initConfig() {
 		}
 		configDir = filepath.Join(home, ".config", "amici")
 
+		viper.SetDefault("scripts_directory", filepath.Join(configDir, "scripts"))
+		viper.SetDefault("templates_directory", filepath.Join(configDir, "templates"))
+
 		viper.AddConfigPath(configDir)
-		viper.SetConfigName("amici")
+		viper.SetConfigName("config")
 		viper.SetConfigType("yaml")
 	}
 	
 	if err := viper.ReadInConfig(); err != nil {
-		if err := os.MkdirAll(configDir, os.ModePerm); err != nil {
-			fmt.Fprintln(os.Stderr, "Could not create config directory ", configDir)
-			os.Exit(1)
+		fmt.Fprintln(os.Stderr, err)
+
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Println("Could not find config file, create? y/N")
+		createConfigFlag, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Failed to read input: ", err)
 		}
-		if err := viper.SafeWriteConfig(); err != nil {
-			fmt.Fprintln(os.Stderr, "Could not create config file within ", configDir)
-			os.Exit(1)
+		createConfigFlag = strings.ToLower(strings.TrimSpace(createConfigFlag))
+
+		if createConfigFlag == "y" {
+			if err := os.MkdirAll(configDir, os.ModePerm); err != nil {
+				fmt.Fprintln(os.Stderr, "Could not create config directory ", configDir)
+				os.Exit(1)
+			}
+			if err := viper.SafeWriteConfig(); err != nil {
+				fmt.Fprintln(os.Stderr, "Could not create config file within ", configDir)
+				os.Exit(1)
+			}
 		}
 	}
+	viper.AddConfigPath(viper.GetString("templates_directory"))
 }

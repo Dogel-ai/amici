@@ -27,6 +27,7 @@ import (
 )
 
 var (
+	// TODO: Scope of some variables should be changed. Why is sumOutput global but template isn't?
 	scriptChoice []string
 	templateChoice string
 	sumOutput string
@@ -52,8 +53,9 @@ Examples:
 					return err
 				}
 				sumOutput += out
+				sumOutput += "\n"
 			}
-			fmt.Println(sumOutput)
+			fmt.Println(sumOutput[0:len(sumOutput)-1])
 		} else {
 			var template task.Template
 			err := task.GetTemplate(&template, templateChoice, viper.GetString("templates_directory"))

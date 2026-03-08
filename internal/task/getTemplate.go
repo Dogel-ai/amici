@@ -2,6 +2,7 @@ package task
 
 import (
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/viper"
 )
@@ -17,7 +18,10 @@ type Script struct {
 }
 
 func GetTemplate(passedTemplate *Template, templateName, templateDirectory string) error {
-    configDir := filepath.Join(templateDirectory, templateName + ".yaml")
+    configDir := filepath.Join(templateDirectory, templateName)
+	if !strings.Contains(templateName, ".yaml") {
+		configDir += ".yaml"
+	}
 
     viper.SetConfigFile(configDir)
     if err := viper.ReadInConfig(); err != nil {

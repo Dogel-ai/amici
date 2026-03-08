@@ -96,4 +96,5 @@ func initConfig() {
 			}
 		}
 	}
+	viper.AddConfigPath(viper.GetString("templates_directory"))
 }
